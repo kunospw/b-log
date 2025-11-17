@@ -73,6 +73,11 @@ A clean, modern, and intuitive full-stack blog platform built with Next.js, Fire
    - Create a Firestore Database (start in test mode)
    - Add Firestore security rules (see below)
    - Copy your Firebase config values to `.env.local`
+   - **Create an admin user** in Firebase Authentication:
+     - Go to Authentication → Users → Add user
+     - Email: `admin@blog.com`
+     - Password: `admin1234`
+     - Or use the test credentials below if already set up
 
 5. **Set up Cloudinary**
    
@@ -115,6 +120,15 @@ A clean, modern, and intuitive full-stack blog platform built with Next.js, Fire
 9. **Open your browser**
    
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+### 🔐 Test Admin Credentials
+
+For testing purposes, you can use the following admin credentials:
+
+- **Email**: `admin@blog.com`
+- **Password**: `admin1234`
+
+**Note**: Make sure to create this user in Firebase Authentication before logging in. Go to Firebase Console → Authentication → Users → Add user.
 
 ## 🛠️ Technology Stack
 
