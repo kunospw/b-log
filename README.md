@@ -33,7 +33,7 @@ A clean, modern, and intuitive full-stack blog platform built with Next.js, Fire
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone <https://github.com/kunospw/b-log.git>
    cd blog
    ```
 
