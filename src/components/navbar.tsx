@@ -16,7 +16,6 @@ export function Navbar() {
   const [authenticated, setAuthenticated] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   useEffect(() => {
     const query = searchParams.get("q") || "";
@@ -31,10 +30,9 @@ export function Navbar() {
     return () => unsubscribe();
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
+    // Close mobile menu when route changes
     setMobileMenuOpen(false);
-    setMobileSearchOpen(false);
   }, [pathname]);
 
   const handleLogout = async () => {
@@ -63,7 +61,7 @@ export function Navbar() {
     if (pathname !== "/") {
       router.push(`/?q=${encodeURIComponent(searchQuery)}`);
     }
-    setMobileSearchOpen(false);
+    setMobileMenuOpen(false);
   };
 
   const isAdminPage = pathname?.startsWith("/admin");
@@ -72,7 +70,6 @@ export function Navbar() {
   return (
     <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Main navbar */}
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link 
@@ -82,12 +79,9 @@ export function Navbar() {
             (b)log
           </Link>
 
-          {/* Desktop Search - hidden on mobile */}
+          {/* Desktop Search - Hidden on mobile */}
           {showSearch && (
-            <form 
-              onSubmit={handleSearchSubmit} 
-              className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8"
-            >
+            <form onSubmit={handleSearchSubmit} className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
@@ -95,14 +89,14 @@ export function Navbar() {
                   placeholder="Search posts..."
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="pl-10"
+                  className="pl-10 w-full"
                 />
               </div>
             </form>
           )}
 
-          {/* Desktop Navigation - hidden on mobile */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-4">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden md:flex items-center gap-4">
             <Link
               href="/"
               className={`text-sm font-medium transition-colors ${
@@ -139,69 +133,47 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile Actions */}
-          <div className="flex md:hidden items-center gap-2">
-            {/* Mobile Search Toggle */}
-            {showSearch && (
-              <button
-                onClick={() => {
-                  setMobileSearchOpen(!mobileSearchOpen);
-                  setMobileMenuOpen(false);
-                }}
-                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-                aria-label="Toggle search"
-              >
-                <Search className="h-5 w-5" />
-              </button>
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
             )}
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => {
-                setMobileMenuOpen(!mobileMenuOpen);
-                setMobileSearchOpen(false);
-              }}
-              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </button>
-          </div>
+          </button>
         </div>
 
-        {/* Mobile Search Bar */}
-        {showSearch && mobileSearchOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-200 pt-4">
-            <form onSubmit={handleSearchSubmit}>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search posts..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className="pl-10"
-                  autoFocus
-                />
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Slide down */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
-            <div className="flex flex-col space-y-3">
+          <div className="md:hidden border-t border-gray-200 py-4 space-y-4">
+            {/* Mobile Search */}
+            {showSearch && (
+              <form onSubmit={handleSearchSubmit} className="px-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search posts..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="pl-10 w-full"
+                  />
+                </div>
+              </form>
+            )}
+
+            {/* Mobile Navigation Links */}
+            <div className="flex flex-col space-y-2 px-2">
               <Link
                 href="/"
-                className={`text-base font-medium transition-colors py-2 ${
+                className={`text-sm font-medium py-2 px-3 rounded-md transition-colors ${
                   pathname === "/"
-                    ? "text-gray-900"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "text-gray-900 bg-gray-100"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -212,10 +184,10 @@ export function Navbar() {
                 <>
                   <Link
                     href="/admin/posts"
-                    className={`text-base font-medium transition-colors py-2 ${
+                    className={`text-sm font-medium py-2 px-3 rounded-md transition-colors ${
                       isAdminPage
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900"
+                        ? "text-gray-900 bg-gray-100"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -223,19 +195,18 @@ export function Navbar() {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-left text-base font-medium text-gray-600 hover:text-gray-900 py-2 transition-colors"
+                    className="text-left text-sm font-medium py-2 px-3 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <Link 
+                <Link
                   href="/admin"
+                  className="text-sm font-medium py-2 px-3 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    Admin
-                  </Button>
+                  Admin Login
                 </Link>
               )}
             </div>

@@ -3,9 +3,11 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { getAllPosts, searchPosts, filterPostsByTag, getAllTags, type Post } from "@/lib/posts";
@@ -79,42 +81,74 @@ function HomeContent() {
     router.push(`/?${params.toString()}`);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+    if (value.trim()) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
+    params.delete("page"); // Reset to page 1 when searching
+    router.push(`/?${params.toString()}`, { scroll: false });
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Search is already handled by handleSearchChange in real-time
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="mx-auto max-w-7xl px-6 py-16">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-16">
+        {/* Mobile Search Bar - Only visible on mobile */}
+        <form onSubmit={handleSearchSubmit} className="md:hidden mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="pl-10 w-full"
+            />
+          </div>
+        </form>
         {allTags.length > 0 && (
-          <Card className="mb-10">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Filter by tags</CardTitle>
-                {activeTag && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleTagClick(activeTag)}
-                    className="h-auto py-1 text-xs"
-                  >
-                    Clear filter
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => handleTagClick(tag)}
-                    className="transition-transform hover:scale-105 active:scale-95"
-                  >
-                    <Badge variant={activeTag === tag ? "active" : "outline"}>
-                      {tag}
-                    </Badge>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-6 flex items-center gap-3">
+            <label htmlFor="tag-filter" className="text-sm font-medium text-gray-700 whitespace-nowrap">
+              Filter by tag:
+            </label>
+            <select
+              id="tag-filter"
+              value={activeTag || ""}
+              onChange={(e) => {
+                const tag = e.target.value;
+                if (tag) {
+                  handleTagClick(tag);
+                } else {
+                  // Clear filter
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("tag");
+                  params.delete("page");
+                  router.push(`/?${params.toString()}`);
+                }
+              }}
+              className="flex h-10 w-full max-w-xs rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">All posts</option>
+              {allTags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+            {activeTag && (
+              <Badge variant="active" className="text-sm">
+                {activeTag}
+              </Badge>
+            )}
+          </div>
         )}
 
         {isLoading ? (
