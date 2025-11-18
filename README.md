@@ -33,7 +33,7 @@ A clean, modern, and intuitive full-stack blog platform built with Next.js, Fire
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone <https://github.com/kunospw/b-log.git>
    cd blog
    ```
 
@@ -127,8 +127,6 @@ For testing purposes, you can use the following admin credentials:
 
 - **Email**: `admin@blog.com`
 - **Password**: `admin1234`
-
-**Note**: Make sure to create this user in Firebase Authentication before logging in. Go to Firebase Console → Authentication → Users → Add user.
 
 ## 🛠️ Technology Stack
 
@@ -280,10 +278,8 @@ The app will automatically deploy on every push to main branch.
 
 **Add your deployed link here after deployment:**
 ```
-https://your-blog.vercel.app
+https://b-log-five.vercel.app/
 ```
-
-**Note**: Replace the placeholder above with your actual deployed URL.
 
 ### Environment Variables for Production
 
@@ -361,8 +357,6 @@ This project is open source and available for educational purposes.
 
 ## 👤 Author
 
-Built as a demonstration project showcasing modern web development practices.
+Built as a technical test for Elice Front-end developer role
 
 ---
-
-**Note**: Remember to set up your Firebase and Cloudinary accounts and configure the environment variables before running the application.
